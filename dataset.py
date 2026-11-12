@@ -11,3 +11,15 @@ test_ratio = 0.15
 
 random.seed(42)
 
+splits = ['train', 'val', 'test']
+
+for split in splits:
+    os.makedirs(os.path.join(output_dir, split), exist_ok=True)
+
+classes = [
+    c for c in os.listdir(input_dir)
+    if os.path.isdir(os.path.join(input_dir, c))
+]
+
+print("Classes found:", classes)
+
