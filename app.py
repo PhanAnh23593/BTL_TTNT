@@ -24,3 +24,7 @@ class LeafCNN(nn.Module):
             nn.Conv2d(64, 128, 3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2),
+            nn.Conv2d(128, 256, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+        )
