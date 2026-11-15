@@ -11,3 +11,10 @@ from fastapi.templating import Jinja2Templates
 from PIL import Image
 from torchvision import transforms
 
+class LeafCNN(nn.Module):
+    def __init__(self, num_classes):
+        super(LeafCNN, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 32, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
