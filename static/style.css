@@ -1,1 +1,15 @@
 /* UI style scaffold. Owner: Phuc. Replace with the planned source styles. */
+/* ── Reset & Tokens ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0d0f14;
+  --surface:   rgba(255,255,255,0.05);
+  --border:    rgba(255,255,255,0.10);
+  --primary:   #4ade80;
+  --primary2:  #22d3ee;
+  --text:      #f0f4f8;
+  --muted:     #6b7280;
+  --radius:    1rem;
+  --shadow:    0 32px 64px rgba(0,0,0,0.5);
+}
