@@ -26,3 +26,29 @@ body {
 }
 
 /* ── Ambient Blobs ───────────────────────────────── */
+.bg-blur {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-blur-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, #4ade80, transparent);
+  top: -200px; left: -200px;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+.bg-blur-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #22d3ee, transparent);
+  bottom: -150px; right: -150px;
+  animation: drift 15s ease-in-out infinite alternate-reverse;
+}
+@keyframes drift {
+  from { transform: translate(0,0); }
+  to   { transform: translate(40px, 40px); }
+}
+
+/* ── Wrapper ─────────────────────────────────────── */
