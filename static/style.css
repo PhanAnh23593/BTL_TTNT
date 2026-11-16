@@ -13,3 +13,16 @@
   --radius:    1rem;
   --shadow:    0 32px 64px rgba(0,0,0,0.5);
 }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+}
+
+/* ── Ambient Blobs ───────────────────────────────── */
