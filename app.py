@@ -28,3 +28,10 @@ class LeafCNN(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(2),
         )
+        elf.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(256 * 14 * 14, 512),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes),
+        )
