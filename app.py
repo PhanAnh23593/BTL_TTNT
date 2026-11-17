@@ -37,5 +37,12 @@ class LeafCNN(nn.Module):
         )
     def forward(self, x):
         return self.classifier(self.features(x))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "best_model.pth")
+DATA_DIR = os.path.join(BASE_DIR, "dataset_split_2", "train")
+
+
+
+
 
 
