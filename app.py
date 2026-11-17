@@ -37,11 +37,20 @@ class LeafCNN(nn.Module):
         )
     def forward(self, x):
         return self.classifier(self.features(x))
+    
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "best_model.pth")
 DATA_DIR = os.path.join(BASE_DIR, "dataset_split_2", "train")
 
 
+CLASS_NAMES = sorted(
+    [
+        d
+        for d in os.listdir(DATA_DIR)
+        if os.path.isdir(os.path.join(DATA_DIR, d))
+    ]
+)
+NUM_CLASSES = len(CLASS_NAMES)
 
 
 
