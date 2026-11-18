@@ -62,3 +62,30 @@ Phiên bản Python, bộ phiên bản dependencies đã dùng khi train, phiên
 
 Cả train và inference tự chọn CUDA nếu `torch.cuda.is_available()` trả về `True`, nếu không dùng CPU. GPU không bắt buộc theo code; repository không công bố yêu cầu RAM/VRAM hay thời gian chạy. Không cần camera hoặc cảm biến chuyên dụng để sử dụng ảnh có sẵn.
 
+## Problem Statement và Input / Output
+
+Đây là bài toán phân loại một nhãn cho mỗi ảnh. Model luôn chọn một trong 5 lớp, kể cả khi đầu vào không phải lá cây; chưa có lớp “unknown” hoặc cơ chế từ chối dự đoán.
+
+| Chỉ số lớp | Nhãn | Ý nghĩa |
+|---:|---|---|
+| 0 | `banana` | Chuối |
+| 1 | `guava` | Ổi |
+| 2 | `jackfruit` | Mít |
+| 3 | `mango` | Xoài |
+| 4 | `neem` | Neem |
+
+Training lấy nhãn qua `ImageFolder`; inference dùng tên thư mục train được sắp xếp theo thứ tự chữ cái. Thứ tự hiện tại cũng khớp `class_names` trong `confusion_matrix_data.npz`.
+
+| Thành phần | Định dạng và nội dung |
+|---|---|
+| Dataset hiện có | Ảnh JPEG trong thư mục theo split và lớp |
+| API input | Một file ảnh qua multipart field `file`; đuôi `png`, `jpg`, `jpeg`, `webp`, `bmp` |
+| Tensor đầu vào | RGB, `N × 3 × 224 × 224`; API dùng `N = 1` |
+| Đầu ra CNN | 5 logits cho mỗi ảnh |
+| API output | JSON có `class`, `confidence`, `all_probs` |
+| Checkpoint | `best_model.pth`, PyTorch `state_dict` |
+| Lịch sử train | `metrics.npz`: loss và accuracy train/validation |
+| Dữ liệu đánh giá | `confusion_matrix_data.npz`: `y_true`, `y_pred`, `class_names` |
+
+`confidence` và các giá trị trong `all_probs` là softmax nhân 100, làm tròn đến hai chữ số thập phân. Chúng không phải accuracy của model; tổng các giá trị sau làm tròn có thể lệch nhẹ so với 100.
+
