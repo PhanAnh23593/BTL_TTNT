@@ -467,3 +467,15 @@ Project Python với HTML/CSS/JavaScript tĩnh **không có bước build riêng
 
 Không thấy marker `TODO`/`FIXME` trong source; các vấn đề trên được xác định từ implementation và artifacts.
 
+## Reproducibility
+
+Có split, checkpoint, transforms và hyperparameters, nhưng **chưa đủ để tái lập chính xác kết quả training**:
+
+- `random.seed(42)` chỉ có trong chia tập; danh sách file/lớp đầu vào không sort.
+- Training không đặt seed cho PyTorch/NumPy, augmentation/DataLoader hoặc deterministic execution.
+- Không lưu phiên bản môi trường, phần cứng, manifest ảnh, checkpoint hash hay run ID cùng metrics.
+- Thiếu nguồn dữ liệu gốc và lịch sử chứng minh cách tạo split hiện tại.
+- Artifacts có mâu thuẫn, các split có ảnh trùng nhau.
+
+Cần lưu mapping lớp, cấu hình, seed, phiên bản dependencies, manifest split và liên kết checkpoint–metrics trước khi công bố kết quả tái lập.
+
