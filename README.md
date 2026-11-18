@@ -140,3 +140,15 @@ Script dùng `random.seed(42)`, xáo trộn danh sách file trong từng lớp, 
 
 **Cần xử lý trước khi chia mới:** script tạo `val/`, còn train đọc `valid/`. Script không xóa output cũ và không sắp xếp danh sách từ `os.listdir`; chạy lại trên output đang có có thể giữ lại ảnh từ lần chia trước. Nên dùng thư mục output mới bằng cách sửa `output_dir`, thống nhất tên `val`/`valid` trong script và đặt `base_dir` của training tương ứng. Không trộn output mới với dataset đã commit.
 
+### Trùng dữ liệu giữa các tập
+
+Kiểm tra SHA-256 toàn bộ nội dung file phát hiện **92 nhóm ảnh giống hệt theo byte xuất hiện ở nhiều split**, bao gồm **316 file** thuộc các nhóm đó.
+
+| Hai tập có nội dung trùng | Số nhóm hash chung | Số file ở tập thứ hai có nội dung xuất hiện ở tập thứ nhất |
+|---|---:|---:|
+| train → valid | 49 | 62 |
+| train → test | 51 | 58 |
+| valid → test | 18 | 21 |
+
+Các hàng có thể giao nhau, không cộng chúng thành số nhóm duy nhất. Hash không phát hiện ảnh gần giống hoặc ảnh khác góc của cùng một lá. Sự trùng lặp làm giảm tính độc lập của đánh giá; cần loại trùng và chia lại trước khi kết luận về khả năng tổng quát hóa.
+
