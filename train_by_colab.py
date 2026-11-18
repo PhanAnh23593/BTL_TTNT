@@ -103,3 +103,9 @@ scheduler = optim.lr_scheduler.StepLR(
     step_size=5,
     gamma=0.5
 )
+
+train_losses_list = []
+val_losses_list = []
+train_acc_list = []
+val_acc_list = []
+
