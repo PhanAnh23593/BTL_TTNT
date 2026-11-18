@@ -9,3 +9,12 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
 from sklearn.metrics import confusion_matrix
+
+class LeafCNN(nn.Module):
+    def __init__(self, num_classes):
+        super(LeafCNN, self).__init__()
+
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 32, 3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
