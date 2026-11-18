@@ -250,3 +250,31 @@ python train_by_colab.py
 
 Đây là hướng dẫn thích nghi với local, **chưa được áp dụng vào source trong repository**. Không có bước preprocess hoặc extract feature riêng cần chạy trước training.
 
+## Model Evaluation
+
+Training tính accuracy train/validation và trung bình loss theo batch sau mỗi epoch. Loss là tổng `loss.item()` chia số batch, không phải trung bình có trọng số theo số ảnh của từng batch. Accuracy là số dự đoán đúng chia số ảnh.
+
+Sau epoch cuối, script chạy lại validation và lưu nhãn thật/dự đoán. Nó **không load lại `best_model.pth`** trước bước này: theo implementation, confusion matrix dùng model cuối, còn checkpoint được chọn theo validation accuracy tốt nhất.
+
+Không có đánh giá test độc lập, cross-validation, ROC-AUC hoặc tính precision/recall/F1 trong các script hiện tại. Không có command `evaluate.py`.
+
+### Xem kết quả đã lưu
+
+Từ thư mục gốc, sau khi cài dependencies bổ sung:
+
+```bash
+python draw.py
+```
+
+`draw.py` đọc hai `.npz` ở thư mục làm việc, hiển thị biểu đồ loss/accuracy, in 5 hàng metrics đầu, in confusion matrix và hiển thị hình ma trận. Script dùng `plt.show()`, không tự lưu PNG; tùy backend, cần đóng biểu đồ đầu để tiếp tục.
+
+Kết quả train mới nằm trong `metrics/`. Muốn xem chúng bằng chính `draw.py`:
+
+```bash
+cd metrics
+python ../draw.py
+cd ..
+```
+
+Trong Colab có thể dùng `%cd` tới `metrics` rồi `%run ../draw.py` để chạy trong notebook. `draw.py` chỉ đọc kết quả đã lưu, không chạy lại model.
+
