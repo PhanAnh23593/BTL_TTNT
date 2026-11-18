@@ -111,3 +111,32 @@ dataset_split_2/train + valid            [dữ liệu thực tế đã commit]
 
 Tiền xử lý và học đặc trưng nằm trong luồng train/inference. Không có `preprocess.py`, `feature_extraction.py`, `predict.py` hoặc `evaluate.py` độc lập. Tập `test/` có sẵn nhưng script train hiện không đọc tập này.
 
+## Dataset
+
+Dataset được lưu trực tiếp trong Git tại `dataset_split_2/`, gồm **2.500 file ảnh JPEG RGB**. Khi kiểm tra bằng Pillow, cả 2.500 ảnh đều đọc được; kích thước gốc không đồng nhất.
+
+| Lớp | Train | Validation (`valid`) | Test | Tổng |
+|---|---:|---:|---:|---:|
+| banana | 350 | 75 | 75 | 500 |
+| guava | 350 | 75 | 75 | 500 |
+| jackfruit | 350 | 75 | 75 | 500 |
+| mango | 350 | 75 | 75 | 500 |
+| neem | 350 | 75 | 75 | 500 |
+| **Tổng** | **1.750** | **375** | **375** | **2.500** |
+
+Tỷ lệ số file hiện tại là 70% / 15% / 15%. Đây là số file ảnh, không phải số ảnh độc nhất sau loại trùng. Sampling frequency không áp dụng cho ảnh tĩnh; tensor sử dụng 3 kênh RGB.
+
+Nguồn xuất bản dataset, tác giả thu thập, public hay tự thu thập, URL tải dữ liệu gốc và giấy phép dữ liệu: **Chưa xác định được từ repository hiện tại.** Tên file có thể chứa tên bệnh nhưng nhãn huấn luyện chỉ lấy từ thư mục loại cây.
+
+### Chia dữ liệu gốc bằng `dataset.py`
+
+Đây là luồng tùy chọn khi có dữ liệu gốc; không cần chạy lại đối với dataset đã commit. Script đòi hỏi thư mục `Dataset2/` ở thư mục làm việc, với một thư mục con cho mỗi lớp. `Dataset2/` đang được `.gitignore` bỏ qua và không có trong checkout.
+
+```bash
+python dataset.py
+```
+
+Script dùng `random.seed(42)`, xáo trộn danh sách file trong từng lớp, lấy `int(n * 0.7)` cho train, `int(n * 0.15)` cho val và phần còn lại cho test, rồi sao chép bằng `shutil.copy2`. Biến `test_ratio` được khai báo nhưng không trực tiếp dùng để tính số file test.
+
+**Cần xử lý trước khi chia mới:** script tạo `val/`, còn train đọc `valid/`. Script không xóa output cũ và không sắp xếp danh sách từ `os.listdir`; chạy lại trên output đang có có thể giữ lại ảnh từ lần chia trước. Nên dùng thư mục output mới bằng cách sửa `output_dir`, thống nhất tên `val`/`valid` trong script và đặt `base_dir` của training tương ứng. Không trộn output mới với dataset đã commit.
+
