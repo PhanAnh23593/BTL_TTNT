@@ -29,7 +29,7 @@ class LeafCNN(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
-        
+
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Linear(256 * 14 * 14, 512),
@@ -37,3 +37,10 @@ class LeafCNN(nn.Module):
             nn.Dropout(0.5),
             nn.Linear(512, num_classes)
         )
+        
+    def forward(self, x):
+        return self.classifier(self.features(x))
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Using device:", device)
+
