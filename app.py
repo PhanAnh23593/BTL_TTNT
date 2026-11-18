@@ -52,6 +52,8 @@ CLASS_NAMES = sorted(
 )
 NUM_CLASSES = len(CLASS_NAMES)
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 
 
