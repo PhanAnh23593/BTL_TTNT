@@ -359,3 +359,20 @@ Không thể khẳng định nhãn dự đoán từ tên thư mục của ảnh.
 
 JavaScript gửi `FormData` đến `/predict`, hiển thị lớp cao nhất, điểm số và các thanh xác suất giảm dần. `CLASS_ICONS` ánh xạ nhãn sang biểu tượng cây/quả. Ngưỡng 70% và 40% chỉ đổi màu, không từ chối dự đoán thấp. Không có điều khiển phần cứng, camera stream hoặc xử lý real-time liên tục.
 
+## Saved Models / Checkpoints và Configuration
+
+Ứng dụng dựng `LeafCNN(NUM_CLASSES)`, gọi `torch.load(MODEL_PATH, map_location=device)`, nạp `load_state_dict`, chuyển model sang device và gọi `eval()`. Checkpoint là `state_dict`, không chứa optimizer, scheduler, danh sách lớp hoặc trạng thái resume đầy đủ.
+
+| Cấu hình | Vị trí và giá trị |
+|---|---|
+| Model inference | `app.py`: `best_model.pth`, tương đối với vị trí file Python |
+| Danh sách lớp | `app.py`: thư mục trong `dataset_split_2/train`, sắp xếp chữ cái |
+| Static/templates | `app.py`: `static`, `templates`, tương đối với thư mục làm việc |
+| Server phát triển | `app.py`: `127.0.0.1:8000`, `reload=True` |
+| Dữ liệu train | `/content/drive/MyDrive/BTL_AI/dataset_split_2` |
+| Model train xuất ra | `/content/drive/MyDrive/BTL_AI/best_model.pth` |
+| Metrics train xuất ra | `/content/drive/MyDrive/BTL_AI/metrics/` |
+| Chia tập | `dataset.py`: `Dataset2` → `dataset_split_2` |
+
+Không có YAML, JSON config hoặc `.env.example`; các giá trị nằm trực tiếp trong Python. Đổi tên/thêm/xóa thư mục lớp có thể sai mapping hoặc làm lớp cuối không khớp checkpoint. Giữ nguyên 5 thư mục và thứ tự lớp khi dùng model đi kèm.
+
