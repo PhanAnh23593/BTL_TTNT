@@ -169,3 +169,22 @@ Với ảnh RGB 8-bit, `ToTensor` đưa pixel về `[0, 1]`; sau đó mỗi kên
 
 Không có handcrafted feature extraction. Các lớp convolution trong `LeafCNN` học đặc trưng từ tensor ảnh đã tiền xử lý. Đặc trưng cuối trước bộ phân loại có kích thước `256 × 14 × 14`, được flatten thành 50.176 phần tử.
 
+## Model Architecture
+
+Chỉ có một kiến trúc: **LeafCNN**, CNN tự định nghĩa, khởi tạo để train từ đầu; script training không load pretrained backbone. Định nghĩa model được lặp lại trong `app.py` và `train_by_colab.py`.
+
+```text
+Input: 3 × 224 × 224
+  → Conv2d(3, 32, kernel=3, padding=1)    → ReLU → MaxPool2d(2)
+  → Conv2d(32, 64, kernel=3, padding=1)   → ReLU → MaxPool2d(2)
+  → Conv2d(64, 128, kernel=3, padding=1)  → ReLU → MaxPool2d(2)
+  → Conv2d(128, 256, kernel=3, padding=1) → ReLU → MaxPool2d(2)
+  → Features: 256 × 14 × 14
+  → Flatten: 50.176
+  → Linear(50.176, 512) → ReLU → Dropout(0.5)
+  → Linear(512, 5)
+  → Logits
+```
+
+Training đưa logits vào `CrossEntropyLoss`. Inference áp dụng softmax rồi argmax; dropout được tắt bởi `model.eval()`. Không có baseline hoặc model đối chứng khác.
+
