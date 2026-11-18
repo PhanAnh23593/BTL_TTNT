@@ -78,3 +78,14 @@ train_loader = DataLoader(
 )
 
 
+valid_loader = DataLoader(
+    valid_dataset,
+    batch_size=32,
+    shuffle=False,
+    num_workers=4,
+    pin_memory=True,
+    persistent_workers=True,
+    prefetch_factor=2
+)
+
+
