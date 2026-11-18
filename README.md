@@ -316,3 +316,46 @@ Accuracy suy ra là **374/375 = 99,7333%**. Source tạo dữ liệu này từ v
 
 Trong lần rà soát tài liệu này đã kiểm tra cú pháp toàn bộ Python, đọc/kiểm tra ảnh, phân tích `.npz`, kiểm tra cấu trúc checkpoint và chạy `draw.py` với backend không mở cửa sổ. Môi trường rà soát chưa cài `torch`, `torchvision`, `fastapi`; **chưa kiểm chứng thực thi load checkpoint, endpoint hoặc giao diện bằng inference mới**, và chưa train lại. Không có output dự đoán mẫu được lưu sẵn trong repository.
 
+## Inference / Prediction và Application Integration
+
+Khởi động `python app.py`, sau đó dùng giao diện hoặc gửi HTTP request. Hai route được định nghĩa trực tiếp trong `app.py`:
+
+| Route | Chức năng |
+|---|---|
+| `GET /` | Render `templates/index.html` cùng danh sách lớp |
+| `POST /predict` | Nhận ảnh ở field `file`, trả dự đoán JSON |
+
+### Ví dụ hoàn chỉnh với ảnh có trong repository
+
+Giữ server đang chạy, mở terminal khác tại thư mục gốc. Trên Windows PowerShell:
+
+```powershell
+curl.exe -X POST "http://127.0.0.1:8000/predict" -F "file=@dataset_split_2/test/banana/20210218_155926.jpg"
+```
+
+Trên Linux/macOS:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" -F "file=@dataset_split_2/test/banana/20210218_155926.jpg"
+```
+
+```text
+20210218_155926.jpg
+    → RGB → 224 × 224 → ToTensor → Normalize
+    → best_model.pth / LeafCNN
+    → 5 logits → softmax → chọn lớp điểm cao nhất
+    → JSON: class + confidence + all_probs
+```
+
+Schema đầu ra dưới đây không phải số liệu dự đoán thực tế:
+
+```text
+class: một trong banana, guava, jackfruit, mango, neem
+confidence: điểm softmax của lớp được chọn, theo %
+all_probs: ánh xạ đủ 5 tên lớp sang điểm softmax theo %
+```
+
+Không thể khẳng định nhãn dự đoán từ tên thư mục của ảnh. Output lỗi xác định được từ source là HTTP 400 với `{"error":"Invalid file type"}` nếu đuôi file không được hỗ trợ. Lỗi giải mã ảnh hoặc lỗi trong khối xử lý trả HTTP 500 kèm `error`.
+
+JavaScript gửi `FormData` đến `/predict`, hiển thị lớp cao nhất, điểm số và các thanh xác suất giảm dần. `CLASS_ICONS` ánh xạ nhãn sang biểu tượng cây/quả. Ngưỡng 70% và 40% chỉ đổi màu, không từ chối dự đoán thấp. Không có điều khiển phần cứng, camera stream hoặc xử lý real-time liên tục.
+
