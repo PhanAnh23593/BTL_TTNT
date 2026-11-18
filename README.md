@@ -479,3 +479,59 @@ Có split, checkpoint, transforms và hyperparameters, nhưng **chưa đủ đ�
 
 Cần lưu mapping lớp, cấu hình, seed, phiên bản dependencies, manifest split và liên kết checkpoint–metrics trước khi công bố kết quả tái lập.
 
+## Troubleshooting
+
+| Triệu chứng | Cách xử lý theo source |
+|---|---|
+| `ModuleNotFoundError` | Kích hoạt đúng môi trường, cài requirements; train/draw cần thêm nhóm dependencies ở Installation |
+| PowerShell chặn `Activate.ps1` | Dùng trực tiếp `.\.venv\Scripts\python.exe -m pip install -r requirements.txt` rồi `.\.venv\Scripts\python.exe app.py` |
+| Không tìm thấy `Dataset2` | Chỉ chạy `dataset.py` khi có dữ liệu gốc; dataset sẵn có không cần chia lại |
+| Không tìm thấy train/valid | Kiểm tra mount Drive, `base_dir` và khác biệt `val`/`valid` |
+| Không tìm thấy checkpoint | Đặt `best_model.pth` cùng thư mục `app.py`; Colab lưu vào đường dẫn Drive cố định |
+| `size mismatch` khi load | Kiểm tra đủ 5 thư mục lớp, kiến trúc và checkpoint tương ứng |
+| Thiếu `static` hoặc template | Chạy app từ thư mục gốc repository |
+| Lỗi ghi `.npz` | Tạo `metrics/` tại đúng đường dẫn trước khi train |
+| `draw.py` không tìm thấy `.npz` | Chạy ở root cho artifacts cũ, trong `metrics/` cho kết quả mới |
+| Lỗi khởi tạo worker Windows | Sửa DataLoader hoặc thêm main guard theo phần Training |
+| `Invalid file type` | Dùng đuôi ảnh được hỗ trợ; đổi đuôi không chuyển đổi nội dung file |
+| API 500 với ảnh lỗi | Kiểm tra ảnh mở được bằng Pillow; backend chưa chuẩn hóa lỗi ảnh hỏng thành 400 |
+| Không thấy biểu đồ trên máy không có màn hình | Dùng backend đồ họa/notebook hoặc sửa `draw.py` để lưu hình thay `plt.show()` |
+| CUDA không khả dụng | Source tự dùng CPU; chưa có yêu cầu CUDA cụ thể trong repository |
+
+## Security / Privacy
+
+Ảnh upload được đọc trong request để suy luận; source không chủ động lưu ảnh thành dataset hoặc log dự đoán. Điều này không xác định chính sách lưu trữ của hạ tầng nếu triển khai bên ngoài. Không commit ảnh nhạy cảm, thông tin cá nhân hoặc metadata riêng tư vào public repository.
+
+Chỉ dùng checkpoint từ nguồn tin cậy. Trước khi public service cần kiểm soát kích thước/nội dung upload, xử lý lỗi an toàn và cấu hình vận hành phù hợp. Giao diện tải font từ Google Fonts nên phần font phụ thuộc mạng ngoài.
+
+## Roadmap đề xuất
+
+Đây là **đề xuất dựa trên thiếu sót quan sát được**, chưa phải tính năng đã implement hoặc kế hoạch được tác giả xác nhận.
+
+### Short-term
+
+1. Kiểm kê nguồn/giấy phép dataset, loại trùng, chia lại dữ liệu độc lập và lưu manifest ảnh/nhãn.
+2. Thống nhất `val`/`valid`, bỏ đường dẫn Colab cố định, tự tạo output và sửa entry point để chạy local/Windows.
+3. Đánh giá đúng checkpoint trên test; lưu hash, mapping lớp và metrics theo cùng run ID.
+4. Bổ sung dependencies, khóa môi trường đã kiểm chứng, viết smoke tests load model/API.
+5. Sửa UI về phân loại loại cây, thao tác đổi ảnh và kiểm tra upload/lỗi.
+
+### Medium-term
+
+- Tách model/transforms dùng chung để tránh lệch training–inference.
+- Thiết lập seed, cấu hình run và checkpoint resume.
+- Khi có tập đánh giá sạch, bổ sung precision/recall/F1 theo lớp, phân tích ảnh sai và so sánh baseline để cải thiện model.
+
+### Long-term
+
+- Đóng gói triển khai, kiểm tra hiệu năng/tài nguyên và giám sát dịch vụ.
+- Mở rộng dữ liệu ngoài thực tế, từ chối ảnh ngoài phạm vi; phát hiện bệnh cần nhãn bệnh và đánh giá riêng.
+- Bổ sung camera/streaming nếu có nhu cầu và kiểm chứng độ trễ cụ thể.
+
+## License
+
+Repository chưa có file `LICENSE`.
+
+> No license has been specified yet.
+
+Giấy phép sử dụng dataset và checkpoint cũng chưa được mô tả riêng.
