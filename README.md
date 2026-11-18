@@ -152,3 +152,16 @@ Kiểm tra SHA-256 toàn bộ nội dung file phát hiện **92 nhóm ảnh gi�
 
 Các hàng có thể giao nhau, không cộng chúng thành số nhóm duy nhất. Hash không phát hiện ảnh gần giống hoặc ảnh khác góc của cùng một lá. Sự trùng lặp làm giảm tính độc lập của đánh giá; cần loại trùng và chia lại trước khi kết luận về khả năng tổng quát hóa.
 
+## Data Preprocessing
+
+| Bước | Training | Validation và inference |
+|---|---|---|
+| Đọc ảnh | `ImageFolder`, RGB | `ImageFolder` cho validation; Pillow `.convert("RGB")` cho upload |
+| Resize | `224 × 224` | `224 × 224` |
+| Lật ngang | `RandomHorizontalFlip()` | Không |
+| Xoay | `RandomRotation(15)` | Không |
+| Chuyển tensor | `ToTensor()` | `ToTensor()` |
+| Normalize | Mean `[0.485, 0.456, 0.406]`, std `[0.229, 0.224, 0.225]` | Giống training |
+
+Với ảnh RGB 8-bit, `ToTensor` đưa pixel về `[0, 1]`; sau đó mỗi kênh được chuẩn hóa theo `(x - mean) / std`. Resize ép ảnh về hình vuông, không có crop hoặc giữ tỷ lệ bằng padding. Không có bước tách nền hoặc định vị lá.
+
