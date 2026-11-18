@@ -95,3 +95,5 @@ print("Classes:", train_dataset.classes)
 print("Num classes:", num_classes)
 
 
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
