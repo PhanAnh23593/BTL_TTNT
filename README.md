@@ -188,3 +188,65 @@ Input: 3 × 224 × 224
 
 Training đưa logits vào `CrossEntropyLoss`. Inference áp dụng softmax rồi argmax; dropout được tắt bởi `model.eval()`. Không có baseline hoặc model đối chứng khác.
 
+## Training
+
+Script là `train_by_colab.py`, không nhận CLI arguments. Các tham số phải sửa trong source.
+
+| Tham số | Giá trị hiện tại |
+|---|---|
+| Epochs | 20 |
+| Batch size | 32, cho train và validation |
+| Loss | `nn.CrossEntropyLoss()` |
+| Optimizer | `optim.Adam(model.parameters(), lr=0.001)` |
+| Scheduler | `StepLR(step_size=5, gamma=0.5)`, gọi sau mỗi epoch |
+| Shuffle | Train `True`; validation `False` |
+| DataLoader | `num_workers=4`, `pin_memory=True`, `persistent_workers=True`, `prefetch_factor=2` |
+| Chọn checkpoint | Lưu khi `val_acc > best_acc`, ban đầu `best_acc = 0.0` |
+| Seed training | Không được thiết lập trong script |
+
+### Training trên Colab theo đường dẫn hiện tại
+
+1. Đưa project vào Google Drive tại `/content/drive/MyDrive/BTL_AI`, gồm `dataset_split_2/train/` và `dataset_split_2/valid/`.
+2. Trong notebook Google Colab, mount Drive:
+
+```python
+from google.colab import drive
+drive.mount("/content/drive")
+```
+
+3. Chạy cell sau. Cần tạo `metrics/` vì script không tự tạo thư mục này:
+
+```python
+%cd /content/drive/MyDrive/BTL_AI
+%pip install -r requirements.txt
+%pip install numpy tqdm scikit-learn pandas matplotlib
+
+from pathlib import Path
+Path("metrics").mkdir(exist_ok=True)
+
+!python train_by_colab.py
+```
+
+Script tự train, đánh giá validation và lưu kết quả. **Train lại sẽ ghi đè `best_model.pth` và các tệp cùng tên trong `metrics/`; sao lưu nếu cần giữ lần chạy cũ.**
+
+### Training trên máy local
+
+Không thể dùng nguyên script ở một đường dẫn local bất kỳ. Sau khi cài dependencies và kiểm tra dataset, sửa các đường dẫn trong `train_by_colab.py`:
+
+| Vị trí | Giá trị local khi chạy từ thư mục gốc |
+|---|---|
+| `base_dir` | `"dataset_split_2"` |
+| Đường dẫn trong `torch.save` | `"best_model.pth"` |
+| Thư mục trong cả hai `np.savez` | `"metrics"` thay cho `/content/drive/MyDrive/BTL_AI/metrics` |
+
+Trên Windows, training chạy ở cấp module và thiếu main guard cho DataLoader nhiều worker. Điều chỉnh tối thiểu: ở **cả hai** DataLoader, đặt `num_workers=0`, bỏ `persistent_workers=True` và `prefetch_factor=2`. Cách sửa cấu trúc lâu dài là đưa luồng training vào `main()` với `if __name__ == "__main__":`.
+
+Sau khi chỉnh source:
+
+```bash
+python -c "from pathlib import Path; Path('metrics').mkdir(exist_ok=True)"
+python train_by_colab.py
+```
+
+Đây là hướng dẫn thích nghi với local, **chưa được áp dụng vào source trong repository**. Không có bước preprocess hoặc extract feature riêng cần chạy trước training.
+
