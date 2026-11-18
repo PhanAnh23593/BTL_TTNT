@@ -450,3 +450,20 @@ Project Python với HTML/CSS/JavaScript tĩnh **không có bước build riêng
 
 `python app.py` chạy server phát triển ở loopback với auto-reload. Chưa có quy trình production deployment, HTTPS, xác thực, giới hạn upload hoặc quản lý worker. Cấu hình phát triển hiện tại chưa phải một bản triển khai production hoàn thiện.
 
+## Known Issues / Limitations
+
+- **Trùng ảnh giữa các split:** metrics có thể đánh giá quá lạc quan, chưa chứng minh khả năng tổng quát hóa.
+- **Kết quả không đồng nhất:** accuracy từ confusion matrix không khớp lịch sử training; thiếu run metadata.
+- **Hardcoded path:** training phụ thuộc `/content/drive/MyDrive/BTL_AI`, không có CLI/config ngoài.
+- **Lệch `val`/`valid`:** script chia tập không khớp training; thiếu `Dataset2` để tái chia từ dữ liệu gốc.
+- **Thiếu tạo output:** `np.savez` lỗi nếu `metrics/` chưa tồn tại, có thể sau khi train đã hoàn tất.
+- **Windows multiprocessing:** thiếu main guard với `num_workers=4`; xem hướng dẫn local.
+- **Dependencies thiếu và chưa pin:** requirements không bao quát train/draw; chưa đủ bằng chứng để khẳng định một xung đột phiên bản cụ thể.
+- **Thiếu test evaluation và metadata checkpoint:** app phụ thuộc thư mục train để xác định lớp; không có resume training.
+- **UI sai phạm vi:** ghi phát hiện bệnh và hardcode “5 Classes”; model phân loại loại cây.
+- **Đổi ảnh qua preview:** overlay ghi “Thay đổi ảnh” nhưng click handler chỉ mở picker khi bấm vùng trống, icon hoặc text. Click trực tiếp preview không được xử lý; có thể kéo thả ảnh khác hoặc tải lại trang.
+- **Upload và lỗi:** chưa giới hạn dung lượng trong mã ứng dụng; kiểm tra đuôi trước khi giải mã; lỗi trả nguyên `str(exc)` với HTTP 500.
+- **Giới hạn model:** không từ chối ảnh ngoài miền, chưa hiệu chỉnh confidence, không xử lý riêng nhiều vùng lá; định nghĩa model bị lặp giữa app/train.
+
+Không thấy marker `TODO`/`FIXME` trong source; các vấn đề trên được xác định từ implementation và artifacts.
+
