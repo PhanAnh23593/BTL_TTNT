@@ -97,3 +97,9 @@ print("Num classes:", num_classes)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+scheduler = optim.lr_scheduler.StepLR(
+    optimizer,
+    step_size=5,
+    gamma=0.5
+)
