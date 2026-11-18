@@ -278,3 +278,41 @@ cd ..
 
 Trong Colab có thể dùng `%cd` tới `metrics` rồi `%run ../draw.py` để chạy trong notebook. `draw.py` chỉ đọc kết quả đã lưu, không chạy lại model.
 
+## Current Results
+
+Các số dưới đây được đọc/tính từ artifacts đã commit, **không phải kết quả train hay inference mới khi viết README**.
+
+### Lịch sử trong `metrics.npz`
+
+Tệp có bốn mảng, mỗi mảng 20 phần tử: `train_losses`, `val_losses`, `train_acc`, `val_acc`. Biến `best_acc` có trong script nhưng không được ghi vào `.npz`.
+
+| Mốc | Train accuracy | Validation accuracy | Train loss | Validation loss |
+|---|---:|---:|---:|---:|
+| Epoch 1 | 69,8857% | 83,4667% | 0,737574 | 0,343882 |
+| Epoch 7, lần đầu đạt validation accuracy cao nhất | 98,4571% | 99,4667% | 0,052047 | 0,033182 |
+| Epoch 20 | 99,7714% | 98,6667% | 0,010996 | 0,034953 |
+
+Validation accuracy cao nhất là **99,4667%**, xuất hiện ở epoch 7, 14 và 18. Với điều kiện lưu `>` trong source, nếu tệp này thuộc cùng lần chạy thì checkpoint được giữ từ lần đạt mức tốt nhất đầu tiên. Chưa có metadata để xác nhận quan hệ giữa checkpoint và lần chạy này.
+
+### Dữ liệu trong `confusion_matrix_data.npz`
+
+Tệp lưu 375 cặp nhãn, 75 nhãn thật mỗi lớp. Ma trận tính từ các cặp nhãn, hàng là nhãn thật và cột là nhãn dự đoán:
+
+| Thật / Dự đoán | banana | guava | jackfruit | mango | neem |
+|---|---:|---:|---:|---:|---:|
+| banana | 74 | 1 | 0 | 0 | 0 |
+| guava | 0 | 75 | 0 | 0 | 0 |
+| jackfruit | 0 | 0 | 75 | 0 | 0 |
+| mango | 0 | 0 | 0 | 75 | 0 |
+| neem | 0 | 0 | 0 | 0 | 75 |
+
+Accuracy suy ra là **374/375 = 99,7333%**. Source tạo dữ liệu này từ validation, nhưng `.npz` không lưu đường dẫn ảnh, split identifier, run ID hoặc hash checkpoint để xác minh nguồn gốc độc lập.
+
+**Không nhất quán:** 99,7333% không khớp validation accuracy cuối (98,6667%) và cao hơn mức cao nhất (99,4667%) trong `metrics.npz`. Không đủ bằng chứng để coi hai artifacts và checkpoint là cùng một lần chạy. Kết hợp với ảnh trùng giữa các split, đây chưa phải benchmark độc lập đáng tin cậy. Repository chưa có kết quả đánh giá chính thức trên tập test.
+
+### Checkpoint và phạm vi kiểm chứng
+
+`best_model.pth` có kích thước **104.331.701 byte**. Cấu trúc lưu trữ có các tên trọng số convolution/linear tương ứng LeafCNN. Ứng dụng có code load checkpoint, preprocess, dự đoán và trả kết quả cho web.
+
+Trong lần rà soát tài liệu này đã kiểm tra cú pháp toàn bộ Python, đọc/kiểm tra ảnh, phân tích `.npz`, kiểm tra cấu trúc checkpoint và chạy `draw.py` với backend không mở cửa sổ. Môi trường rà soát chưa cài `torch`, `torchvision`, `fastapi`; **chưa kiểm chứng thực thi load checkpoint, endpoint hoặc giao diện bằng inference mới**, và chưa train lại. Không có output dự đoán mẫu được lưu sẵn trong repository.
+
