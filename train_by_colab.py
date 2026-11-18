@@ -64,5 +64,8 @@ val_transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 
+train_dataset = datasets.ImageFolder(train_dir, transform=train_transform)
+valid_dataset = datasets.ImageFolder(valid_dir, transform=val_transform)
+
 
 
