@@ -48,5 +48,13 @@ base_dir = "/content/drive/MyDrive/BTL_AI/dataset_split_2"
 train_dir = os.path.join(base_dir, "train")
 valid_dir = os.path.join(base_dir, "valid")
 
+train_transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(15),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406],
+                         [0.229, 0.224, 0.225])
+])
 
 
