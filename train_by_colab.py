@@ -88,4 +88,10 @@ valid_loader = DataLoader(
     prefetch_factor=2
 )
 
+num_classes = len(train_dataset.classes)
+model = LeafCNN(num_classes=num_classes).to(device)
+
+print("Classes:", train_dataset.classes)
+print("Num classes:", num_classes)
+
 
