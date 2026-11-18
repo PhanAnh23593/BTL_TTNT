@@ -403,3 +403,38 @@ BTL_AI/
 
 Mỗi split chứa 5 thư mục `banana/`, `guava/`, `jackfruit/`, `mango/`, `neem/`. `metrics/` cần tạo khi training, chưa có trong checkout. Không có notebook `.ipynb`, source MATLAB/C++, `tests/`, Dockerfile hoặc cấu hình CI/deploy.
 
+## Trạng thái các thành phần
+
+Quy ước: ✅ hoàn thành trong phạm vi nêu; 🟡 có implementation nhưng còn giới hạn; 🚧 đang phát triển; ❌ chưa có. Bảng phân biệt dữ liệu đã kiểm tra với runtime chưa chạy lại trong lần rà soát.
+
+| Thành phần | Trạng thái | Bằng chứng và giới hạn |
+|---|---|---|
+| Dataset tổ chức theo lớp | ✅ | 2.500 ảnh đọc được, đủ 5 lớp ở cả 3 split |
+| Chia dữ liệu | 🟡 | Có shuffle/copy; lệch `val`/`valid`, giữ output cũ |
+| Data loading và preprocessing | 🟡 | Có ImageFolder/transforms; chưa chạy lại với PyTorch |
+| Học đặc trưng CNN | 🟡 | Convolution nối với classifier; chưa kiểm chứng forward trong môi trường rà soát |
+| Training | 🟡 | Có vòng train/validation và artifacts; đường dẫn cố định, thiếu main guard |
+| Evaluation | 🟡 | Có accuracy/loss/confusion matrix; thiếu test độc lập, artifacts không nhất quán |
+| Vẽ kết quả | ✅ | `draw.py` chạy được trên hai NPZ có sẵn với backend Agg |
+| Model inference | 🟡 | Có checkpoint và implementation; chưa chạy lại endpoint |
+| Web integration | 🟡 | Có upload, API, hiển thị kết quả; còn hạn chế UI và xử lý lỗi |
+| Automated tests | ❌ | Không có test suite |
+| Real-time streaming | ❌ | Chỉ xử lý từng request ảnh |
+| Production deployment | ❌ | Không có quy trình hoặc cấu hình deploy |
+
+### Project Progress
+
+Checklist đánh dấu implementation/artifact hiện có, không có nghĩa tất cả đã được kiểm chứng end-to-end:
+
+- [x] Dataset đã chia và bộ đọc ảnh theo lớp.
+- [x] Resize, augmentation và normalization.
+- [x] LeafCNN học đặc trưng, phân loại 5 lớp.
+- [x] Training, validation, lưu checkpoint và metrics.
+- [x] API prediction và giao diện upload ảnh.
+- [x] Script vẽ metrics/confusion matrix.
+- [ ] Thống nhất script chia dữ liệu với training.
+- [ ] Loại trùng và đánh giá trên test độc lập.
+- [ ] Gắn kết quả với đúng checkpoint, split và cấu hình.
+- [ ] Bổ sung tests và môi trường tái lập.
+- [ ] Hoàn thiện đóng gói/deploy.
+
