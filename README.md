@@ -376,3 +376,30 @@ JavaScript gửi `FormData` đến `/predict`, hiển thị lớp cao nhất, đ
 
 Không có YAML, JSON config hoặc `.env.example`; các giá trị nằm trực tiếp trong Python. Đổi tên/thêm/xóa thư mục lớp có thể sai mapping hoặc làm lớp cuối không khớp checkpoint. Giữ nguyên 5 thư mục và thứ tự lớp khi dùng model đi kèm.
 
+## Cấu trúc project
+
+```text
+BTL_AI/
+├── app.py                       # LeafCNN, load model, FastAPI và inference
+├── dataset.py                   # Chia Dataset2 thành train/val/test
+├── train_by_colab.py            # Train, validation, lưu model và metrics
+├── draw.py                     # Đọc NPZ, vẽ metrics và confusion matrix
+├── best_model.pth              # Checkpoint có sẵn
+├── metrics.npz                 # Lịch sử 20 epoch có sẵn
+├── confusion_matrix_data.npz   # Nhãn thật/dự đoán và tên lớp có sẵn
+├── dataset_split_2/
+│   ├── train/                  # 1.750 ảnh
+│   ├── valid/                  # 375 ảnh
+│   └── test/                   # 375 ảnh
+├── templates/
+│   └── index.html              # Giao diện upload và kết quả
+├── static/
+│   ├── script.js               # Preview, upload, gọi API, hiển thị kết quả
+│   └── style.css               # Giao diện và responsive styles
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+Mỗi split chứa 5 thư mục `banana/`, `guava/`, `jackfruit/`, `mango/`, `neem/`. `metrics/` cần tạo khi training, chưa có trong checkout. Không có notebook `.ipynb`, source MATLAB/C++, `tests/`, Dockerfile hoặc cấu hình CI/deploy.
+
