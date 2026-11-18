@@ -89,3 +89,25 @@ Training lấy nhãn qua `ImageFolder`; inference dùng tên thư mục train đ
 
 `confidence` và các giá trị trong `all_probs` là softmax nhân 100, làm tròn đến hai chữ số thập phân. Chúng không phải accuracy của model; tổng các giá trị sau làm tròn có thể lệch nhẹ so với 100.
 
+## Pipeline AI
+
+```text
+Dataset2/<class>/*                       [nguồn thô không có trong repo]
+    → dataset.py: shuffle, copy theo tỷ lệ 70/15/15
+    → train/val/test                     [script tạo "val"]
+
+dataset_split_2/train + valid            [dữ liệu thực tế đã commit]
+    → ImageFolder, đọc RGB
+    → Resize + augmentation cho train + ToTensor + Normalize
+    → LeafCNN → CrossEntropyLoss → Adam → StepLR
+    → Validation sau mỗi epoch
+    → Lưu best_model.pth nếu validation accuracy tăng
+    → Lưu metrics; dự đoán validation bằng model cuối để lưu y_true/y_pred
+
+Ảnh upload → kiểm tra đuôi → đọc RGB → Resize → ToTensor → Normalize
+    → LeafCNN đã load checkpoint, eval + no_grad
+    → Softmax → argmax → JSON → giao diện web
+```
+
+Tiền xử lý và học đặc trưng nằm trong luồng train/inference. Không có `preprocess.py`, `feature_extraction.py`, `predict.py` hoặc `evaluate.py` độc lập. Tập `test/` có sẵn nhưng script train hiện không đọc tập này.
+
