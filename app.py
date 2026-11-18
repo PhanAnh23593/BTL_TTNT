@@ -54,6 +54,11 @@ NUM_CLASSES = len(CLASS_NAMES)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+model = LeafCNN(num_classes=NUM_CLASSES)
+model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+model.to(device)
+model.eval()
+
 
 
 
