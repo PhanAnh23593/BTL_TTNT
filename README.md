@@ -438,3 +438,15 @@ Checklist đánh dấu implementation/artifact hiện có, không có nghĩa t�
 - [ ] Bổ sung tests và môi trường tái lập.
 - [ ] Hoàn thiện đóng gói/deploy.
 
+## Testing
+
+**Project hiện chưa có automated test suite.** `draw.py` là công cụ xem kết quả, không phải test model. `test/` là dữ liệu, không được script training đánh giá.
+
+Sau khi cài môi trường, kiểm tra thủ công: chạy app; mở trang chủ; gửi ảnh mẫu bằng curl; kiểm tra JSON có đủ 5 lớp; gửi file có đuôi không hỗ trợ để kiểm tra phản hồi 400. Muốn đo chất lượng trên 375 ảnh test cần bổ sung vòng evaluation load checkpoint; chưa có command cho việc này.
+
+## Build / Deploy
+
+Project Python với HTML/CSS/JavaScript tĩnh **không có bước build riêng**. Sau khi cài dependencies có thể chạy trực tiếp bằng Python. Không có Docker, PyInstaller, pipeline build hoặc cấu hình hosting.
+
+`python app.py` chạy server phát triển ở loopback với auto-reload. Chưa có quy trình production deployment, HTTPS, xác thực, giới hạn upload hoặc quản lý worker. Cấu hình phát triển hiện tại chưa phải một bản triển khai production hoàn thiện.
+
