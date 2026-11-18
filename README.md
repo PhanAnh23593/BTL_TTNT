@@ -165,3 +165,7 @@ Các hàng có thể giao nhau, không cộng chúng thành số nhóm duy nhấ
 
 Với ảnh RGB 8-bit, `ToTensor` đưa pixel về `[0, 1]`; sau đó mỗi kênh được chuẩn hóa theo `(x - mean) / std`. Resize ép ảnh về hình vuông, không có crop hoặc giữ tỷ lệ bằng padding. Không có bước tách nền hoặc định vị lá.
 
+## Feature Extraction
+
+Không có handcrafted feature extraction. Các lớp convolution trong `LeafCNN` học đặc trưng từ tensor ảnh đã tiền xử lý. Đặc trưng cuối trước bộ phân loại có kích thước `256 × 14 × 14`, được flatten thành 50.176 phần tử.
+
