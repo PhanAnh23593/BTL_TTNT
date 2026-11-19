@@ -52,3 +52,30 @@ body {
 }
 
 /* ── Wrapper ─────────────────────────────────────── */
+.wrapper {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 760px;
+  display: flex; flex-direction: column; gap: 1.5rem;
+}
+
+/* ── Header ──────────────────────────────────────── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo { display: flex; align-items: center; gap: 0.75rem; }
+.logo-icon { font-size: 2rem; line-height: 1; }
+.logo h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+.logo p  { font-size: 0.8rem; color: var(--muted); margin-top: 1px; }
+
+.badge {
+  background: linear-gradient(135deg, rgba(74,222,128,.15), rgba(34,211,238,.15));
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.3px;
+}
+
+/* ── Main Card ───────────────────────────────────── */
