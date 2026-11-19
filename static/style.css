@@ -187,3 +187,23 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Divider ─────────────────────────────────────── */
+.divider {
+  display: flex; align-items: center; gap: 1rem;
+  color: var(--muted); font-size: 0.75rem; letter-spacing: 0.5px;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1;
+  height: 1px; background: var(--border);
+}
+
+/* ── Result Section ──────────────────────────────── */
+.result-section { min-height: 60px; }
+
+.result-placeholder {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Top result */
