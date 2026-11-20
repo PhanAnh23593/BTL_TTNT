@@ -72,6 +72,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "bmp"}
+
 
 
 
