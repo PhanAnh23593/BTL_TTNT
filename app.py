@@ -83,6 +83,10 @@ async def index(request: Request):
         "index.html", {"request": request, "classes": CLASS_NAMES}
     )
 
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    if not allowed_file(file.filename):
+        return JSONResponse({"error": "Invalid file type"}, status_code=400)
 
 
 
