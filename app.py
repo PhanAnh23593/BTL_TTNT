@@ -77,6 +77,12 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "bmp"}
 def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "classes": CLASS_NAMES}
+    )
+
 
 
 
