@@ -91,6 +91,8 @@ async def predict(file: UploadFile = File(...)):
     try:
         image_data = await file.read()
         img = Image.open(io.BytesIO(image_data)).convert("RGB")
+        tensor = transform(img).unsqueeze(0).to(device)
+
 
 
 
