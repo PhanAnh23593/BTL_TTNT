@@ -88,5 +88,9 @@ async def predict(file: UploadFile = File(...)):
     if not allowed_file(file.filename):
         return JSONResponse({"error": "Invalid file type"}, status_code=400)
 
+    try:
+        image_data = await file.read()
+        img = Image.open(io.BytesIO(image_data)).convert("RGB")
+
 
 
