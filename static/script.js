@@ -17,3 +17,8 @@ const resultClass       = document.getElementById('resultClass');
 const resultIcon        = document.getElementById('resultIcon');
 const confidenceBadge   = document.getElementById('confidenceBadge');
 const probList          = document.getElementById('probList');
+const CLASS_ICONS = {
+  banana: '🍌', guava: '🍈', jackfruit: '🌳', mango: '🥭', neem: '🌿'
+};
+
+let selectedFile = null;
