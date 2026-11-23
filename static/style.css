@@ -271,3 +271,17 @@ body {
 }
 
 /* ── Footer ──────────────────────────────────────── */
+.footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 520px) {
+  .card { padding: 1.25rem; }
+  .result-top { flex-wrap: wrap; }
+  .result-class { font-size: 1.4rem; }
+  .prob-name { width: 70px; }
+}
