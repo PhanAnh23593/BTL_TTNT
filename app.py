@@ -97,6 +97,10 @@ async def predict(file: UploadFile = File(...)):
             outputs = model(tensor)
             probs = torch.softmax(outputs, dim=1)[0]
 
+        top_idx = probs.argmax().item()
+        top_class = CLASS_NAMES[top_idx]
+        top_confidence = round(probs[top_idx].item() * 100, 2)
+
 
 
 
