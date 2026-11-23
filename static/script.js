@@ -22,3 +22,16 @@ const CLASS_ICONS = {
 };
 
 let selectedFile = null;
+// ── File Selection ──────────────────────────────────────────────────────────
+browseBtn.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('click', (e) => {
+  if (e.target === dropZone || e.target.closest('.drop-icon') || e.target.closest('.drop-text')) {
+    fileInput.click();
+  }
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+
+// ── Drag & Drop ─────────────────────────────────────────────────────────────
