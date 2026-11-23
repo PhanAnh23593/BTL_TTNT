@@ -45,3 +45,21 @@ dropZone.addEventListener('drop', (e) => {
 });
 
 // ── Handle File ─────────────────────────────────────────────────────────────
+function handleFile(file) {
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewImg.src = e.target.result;
+    dropIcon.style.display = 'none';
+    dropText.style.display = 'none';
+    dropPreview.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+  predictBtn.disabled = false;
+
+  // Reset results
+  resultPlaceholder.style.display = 'block';
+  resultContent.style.display = 'none';
+}
+
+// ── Predict ─────────────────────────────────────────────────────────────────
