@@ -237,3 +237,37 @@ body {
 }
 
 /* Probability bars */
+.prob-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+.prob-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  animation: fadeUp .4s ease;
+}
+.prob-name {
+  width: 90px; font-size: 0.82rem; font-weight: 500;
+  text-transform: capitalize; flex-shrink: 0;
+  color: var(--text);
+}
+.prob-bar-track {
+  flex: 1; height: 8px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.prob-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary), var(--primary2));
+  width: 0%;
+  transition: width 0.7s cubic-bezier(.22,1,.36,1);
+}
+.prob-bar-fill.muted-bar {
+  background: rgba(255,255,255,0.15);
+}
+.prob-val {
+  width: 46px; text-align: right;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--muted);
+}
+
+/* ── Footer ──────────────────────────────────────── */
