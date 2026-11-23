@@ -93,6 +93,10 @@ async def predict(file: UploadFile = File(...)):
         img = Image.open(io.BytesIO(image_data)).convert("RGB")
         tensor = transform(img).unsqueeze(0).to(device)
 
+        with torch.no_grad():
+            outputs = model(tensor)
+            probs = torch.softmax(outputs, dim=1)[0]
+
 
 
 
