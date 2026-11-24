@@ -101,6 +101,12 @@ async def predict(file: UploadFile = File(...)):
         top_class = CLASS_NAMES[top_idx]
         top_confidence = round(probs[top_idx].item() * 100, 2)
 
+        all_probs = {
+            CLASS_NAMES[i]: round(probs[i].item() * 100, 2)
+            for i in range(NUM_CLASSES)
+        }
+
+
 
 
 
