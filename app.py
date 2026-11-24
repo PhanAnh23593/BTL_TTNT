@@ -106,6 +106,13 @@ async def predict(file: UploadFile = File(...)):
             for i in range(NUM_CLASSES)
         }
 
+        return {
+            "class": top_class,
+            "confidence": top_confidence,
+            "all_probs": all_probs,
+        }
+
+
 
 
 
