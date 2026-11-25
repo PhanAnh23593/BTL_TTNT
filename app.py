@@ -114,7 +114,12 @@ async def predict(file: UploadFile = File(...)):
 
     except Exception as exc:
         return JSONResponse({"error": str(exc)}, status_code=500)
-    
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+
 
 
 
