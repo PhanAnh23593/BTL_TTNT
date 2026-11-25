@@ -112,6 +112,13 @@ async def predict(file: UploadFile = File(...)):
             "all_probs": all_probs,
         }
 
+    except Exception as exc:
+        return JSONResponse({"error": str(exc)}, status_code=500)
+    
+
+
+
+
 
 
 
